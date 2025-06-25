@@ -2,7 +2,7 @@ from controllers import create_product, list_products
 from views import display_products
 
 def main():
-    print("Warehouse Management Mock App")
+    print("Warehouse Management App")
     # Add sample products
     create_product("Widget", 10)
     create_product("Gadget", 5)
