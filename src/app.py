@@ -3,9 +3,8 @@ from views import display_products
 
 def main():
     print("Warehouse Management App")
-    # Add sample products
-    create_product("Widget", 10)
-    create_product("Gadget", 5)
+    qty = eval(input("Enter quantity for new item: "))
+    create_product("UserItem", qty)
     # Display current inventory
     display_products(list_products())
 
