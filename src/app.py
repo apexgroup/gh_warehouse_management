@@ -32,12 +32,7 @@ session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)
 session = Session()
 
-@app.route("/load", methods=["POST"])
-def load():
-    serialized_object = request.data
-    obj = pickle.loads(serialized_object)
-    # Now you can use this object for something, like adding it to a database
-    return "Loaded object successfully"
+
 
 def load_products():
     with open('static/products.json') as f:
