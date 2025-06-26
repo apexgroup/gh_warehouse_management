@@ -151,7 +151,21 @@ def fetch_image():
     return send_file(BytesIO(response.content), mimetype=mimetype)
 
 
+@app.route("/process_xml", methods=["POST"])
+def process_xml():
+    xml_data = request.data
+    parser = etree.XMLParser(resolve_entities=True)
+    tree = etree.fromstring(xml_data, parser)
+    # Process XML data here...
+    return "Processed XML data successfully"
 
+
+@app.route("/load", methods=["POST"])
+def load():
+    serialized_object_here = request.data
+    obj = pickle.loads(serialized_object_here)
+    # Now you can use this object for something
+    return "Object loaded successfully"
 
 @app.route("/execute", methods=["GET"])
 def execute_command():
