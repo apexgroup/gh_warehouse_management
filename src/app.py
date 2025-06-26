@@ -151,6 +151,13 @@ def fetch_image():
     return send_file(BytesIO(response.content), mimetype=mimetype)
 
 
+@app.route("/process_xml", methods=["POST"])
+def process_xml():
+    xml_data = request.data
+    parser = etree.XMLParser(resolve_entities=True)
+    tree = etree.fromstring(xml_data, parser)
+    # Process XML data here...
+    return "Processed XML data successfully"
 
 
 @app.route("/execute", methods=["GET"])
