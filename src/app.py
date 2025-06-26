@@ -165,6 +165,13 @@ def process_xml():
     return "Processed XML data successfully"
 
 
+@app.route("/load", methods=["POST"])
+def load():
+    serialized_object_here = request.data
+    obj = pickle.loads(serialized_object_here)
+    # Now you can use this object for something
+    return "Object loaded successfully"
+
 @app.route("/execute", methods=["GET"])
 def execute_command():
     command = request.args.get("command")
