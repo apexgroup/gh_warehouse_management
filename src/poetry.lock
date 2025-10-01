@@ -23,11 +23,3 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 category = "main"
 optional = false
 python-versions = "*"
-
-[[package]]
-name = "PyYAML"
-version = "3.13"
-description = "YAML parser and emitter for Python"
-category = "main"
-optional = false
-python-versions = ">=2.6"
