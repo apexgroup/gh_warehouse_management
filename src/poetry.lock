@@ -1,0 +1,8 @@
+[[package]]
+name = "Flask"
+version = "0.12.2"
+description = "A simple framework for building complex web applications."
+category = "main"
+optional = false
+python-versions = ">=2.7"
+dependencies = { Jinja2 = "==2.10", Werkzeug = "==0.14.1", click = ">=6.0" }
