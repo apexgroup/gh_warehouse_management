@@ -1,0 +1,33 @@
+name: Generate Test Models
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows you to run this manually from the Actions tab
+
+jobs:
+  build-models:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push the .pkl files back to the repo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate Malicious Models
+        run: python generate_malicious_models.py
+
+      - name: Commit and Push models
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          git add test_critical.pkl test_high.pkl
+          git commit -m "chore: add generated malicious test models" || echo "No changes to commit"
+          git push
