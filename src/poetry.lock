@@ -6,3 +6,20 @@ category = "main"
 optional = false
 python-versions = ">=2.7"
 dependencies = { Jinja2 = "==2.10", Werkzeug = "==0.14.1", click = ">=6.0" }
+
+[[package]]
+name = "requests"
+version = "2.19.1"
+description = "Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = ">=2.7"
+dependencies = { urllib3 = "==1.22", chardet = ">=3.0.2,<3.1.0" }
+
+[[package]]
+name = "urllib3"
+version = "1.22"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "main"
+optional = false
+python-versions = "*"
