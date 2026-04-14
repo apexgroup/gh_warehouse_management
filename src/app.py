@@ -160,20 +160,19 @@ def execute_command():
 
     # Whitelisted commands and their allowed arguments
     allowed_commands = {
-        "bash": ["-c"],  # more useful
         "echo": [],
         "env": [],
-        "ls": ["-l", "-a"]
+        "ls": ["-l", "-a", "-h"]
     }
 
     # Check if command is whitelisted
     if command not in allowed_commands:
         return "Invalid command", 400
 
-    # Validate arguments
-    # for idx, arg in enumerate(args):
-    #     if idx % 2 == 0 and (arg not in allowed_commands[command] and arg.startswith("-")):
-    #         return f"Invalid argument {arg} for command {command}", 400
+    # Validate that all provided arguments are in the allowlist for this command
+    for arg in args:
+        if arg not in allowed_commands[command]:
+            return f"Invalid argument '{arg}' for command '{command}'", 400
 
     # Execute command safely using subprocess
     try:
