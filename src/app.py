@@ -150,9 +150,6 @@ def fetch_image():
     mimetype = response.headers.get("Content-Type", "application/octet-stream")
     return send_file(BytesIO(response.content), mimetype=mimetype)
 
-
-
-
 @app.route("/execute", methods=["GET"])
 def execute_command():
     command = request.args.get("command")

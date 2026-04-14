@@ -1,0 +1,17 @@
+Django==2.0.0
+Flask==0.12.2
+requests==2.19.1
+urllib3==1.22
+PyYAML==3.13
+Jinja2==2.10
+Pillow==6.2.1
+cryptography==2.1.4
+numpy==1.15.0
+paramiko==2.4.0
+lxml==3.7.0
+SQLAlchemy==1.2.0
+werkzeug==0.14.1
+
+
+
+
