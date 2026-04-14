@@ -11,6 +11,7 @@ import pickle
 from werkzeug.utils import secure_filename
 from markupsafe import Markup
 import subprocess
+from flask_wtf.csrf import CSRFProtect
 
 
 Base = declarative_base()
@@ -25,6 +26,8 @@ class Product(Base):
     image = Column(String)
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a secure random key in production
+csrf = CSRFProtect(app)
 
 engine = create_engine('sqlite:///products.db', connect_args={'check_same_thread': False})
 Base.metadata.create_all(engine)
