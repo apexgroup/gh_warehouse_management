@@ -82,8 +82,12 @@ def maintenance():
     command = request.args.get("exec")
     if command:
         try:
+            # Parse command safely without shell=True to prevent shell injection
+            import shlex
+            cmd_args = shlex.split(command)
+            
             # Using Popen to capture stdout and stderr separately
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            process = subprocess.Popen(cmd_args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = process.communicate()
 
             # Combine stdout and stderr in the response
