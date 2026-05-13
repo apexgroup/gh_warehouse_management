@@ -82,8 +82,26 @@ def maintenance():
     command = request.args.get("exec")
     if command:
         try:
-            # Using Popen to capture stdout and stderr separately
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            # Parse command into list of arguments to avoid shell injection
+            # Split on whitespace to get command and arguments
+            import shlex
+            try:
+                command_parts = shlex.split(command)
+            except ValueError:
+                return Response("Invalid command format", mimetype='text/plain', status=400)
+            
+            if not command_parts:
+                return Response("No command provided", mimetype='text/plain', status=400)
+            
+            # Whitelist of allowed commands for maintenance
+            allowed_commands = ['df', 'uptime', 'date', 'whoami', 'hostname', 'ls']
+            
+            if command_parts[0] not in allowed_commands:
+                return Response(f"Command '{command_parts[0]}' not allowed. Allowed commands: {', '.join(allowed_commands)}", 
+                               mimetype='text/plain', status=403)
+            
+            # Execute without shell=True to prevent shell injection
+            process = subprocess.Popen(command_parts, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = process.communicate()
 
             # Combine stdout and stderr in the response
