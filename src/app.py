@@ -11,6 +11,8 @@ import pickle
 from werkzeug.utils import secure_filename
 from markupsafe import Markup
 import subprocess
+import ipaddress
+from urllib.parse import urlparse
 
 
 Base = declarative_base()
@@ -23,6 +25,50 @@ class Product(Base):
     description = Column(String)
     price = Column(Float)
     image = Column(String)
+
+def is_safe_url(url):
+    """
+    Validate URL to prevent SSRF attacks.
+    Blocks internal IP addresses, localhost, and cloud metadata endpoints.
+    """
+    try:
+        parsed = urlparse(url)
+        
+        # Only allow http and https schemes
+        if parsed.scheme not in ('http', 'https'):
+            return False
+        
+        # Ensure hostname is present
+        if not parsed.hostname:
+            return False
+        
+        # Block localhost and local hostnames
+        if parsed.hostname.lower() in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):
+            return False
+        
+        # Try to parse as IP address
+        try:
+            ip = ipaddress.ip_address(parsed.hostname)
+            # Block private IP ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
+            # Block loopback (127.0.0.0/8)
+            # Block link-local (169.254.0.0/16, including AWS metadata 169.254.169.254)
+            # Block other reserved ranges
+            if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+                return False
+        except ValueError:
+            # Not an IP address, it's a hostname - perform basic validation
+            # Block common cloud metadata hostnames
+            blocked_hostnames = [
+                'metadata.google.internal',
+                'metadata',
+                'instance-data'
+            ]
+            if parsed.hostname.lower() in blocked_hostnames:
+                return False
+        
+        return True
+    except Exception:
+        return False
 
 app = Flask(__name__)
 
@@ -145,8 +191,12 @@ def fetch_image():
     # Check if the URL parameter is present and not empty
     if not url:
         return "URL parameter is missing.", 400
+    
+    # Validate URL to prevent SSRF attacks
+    if not is_safe_url(url):
+        return "Invalid or blocked URL. Cannot fetch from internal/private addresses.", 403
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     mimetype = response.headers.get("Content-Type", "application/octet-stream")
     return send_file(BytesIO(response.content), mimetype=mimetype)
 
