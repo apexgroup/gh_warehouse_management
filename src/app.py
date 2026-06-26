@@ -11,6 +11,7 @@ import pickle
 from werkzeug.utils import secure_filename
 from markupsafe import Markup
 import subprocess
+import shlex
 
 
 Base = declarative_base()
@@ -82,8 +83,11 @@ def maintenance():
     command = request.args.get("exec")
     if command:
         try:
-            # Using Popen to capture stdout and stderr separately
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            # Using Popen to capture stdout and stderr separately.
+            # Parse the command into argv with shlex and run without a shell
+            # so shell metacharacters can't be used for injection.
+            args = shlex.split(command)
+            process = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = process.communicate()
 
             # Combine stdout and stderr in the response
