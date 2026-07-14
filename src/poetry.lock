@@ -6,3 +6,12 @@ category = "main"
 optional = false
 python-versions = ">=2.7"
 dependencies = { Jinja2 = "==2.10", Werkzeug = "==0.14.1", click = ">=6.0" }
+
+[[package]]
+name = "Flask-WTF"
+version = "1.2.1"
+description = "Form rendering, validation, and CSRF protection for Flask with WTForms."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+dependencies = { Flask = "*", WTForms = "*", itsdangerous = "*" }
